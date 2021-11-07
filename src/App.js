@@ -1,16 +1,30 @@
-import * as React from "react";
-import { ethers } from "ethers";
+import React, { useEffect } from "react";
 import './App.css';
 
-export default function App() {
+const App = () => {
+  const checkIfWalletIsConnected = () => {
+    /*
+    * First make sure we have access to window.ethereum
+    */
+    const { ethereum } = window;
 
-  const wave = () => {
-    
+    if (!ethereum) {
+      console.log("Make sure you have metamask!");
+      return;
+    } else {
+      console.log("We have the ethereum object", ethereum);
+    }
   }
+
+  /*
+  * This runs our function when the page loads.
+  */
+  useEffect(() => {
+    checkIfWalletIsConnected();
+  }, [])
   
   return (
     <div className="mainContainer">
-
       <div className="dataContainer">
         <div className="header">
         👋 Hey there!
@@ -27,3 +41,5 @@ export default function App() {
     </div>
   );
 }
+
+export default App
