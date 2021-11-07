@@ -34,7 +34,7 @@ const App = () => {
         I am Abdou and I love computers and maths. Connect your Ethereum wallet and wave at me!
         </div>
 
-        <button className="waveButton" onClick={wave}>
+        <button className="waveButton" onClick={null}>
           Wave at Me
         </button>
       </div>
