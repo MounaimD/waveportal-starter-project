@@ -5,6 +5,7 @@ import abi from './utils/WavePortal.json';
 
 const App = () => {
   const [currentAccount, setCurrentAccount] = useState("");
+  let isReturningUser = 0;
   /**
    * Create a variable here that holds the contract address after you deploy!
    */
@@ -20,6 +21,7 @@ const App = () => {
         return;
       } else {
         console.log("We have the ethereum object", ethereum);
+        console.log("Chain ID : ", ethereum.chainId);
       }
 
       const accounts = await ethereum.request({ method: 'eth_accounts' });
@@ -48,10 +50,35 @@ const App = () => {
         return;
       }
 
-      const accounts = await ethereum.request({ method: "eth_requestAccounts" });
+      if (ethereum & ethereum.chainId !=='0x4') {
+        alert("Please connect to the Ethereum Rinkeby Testnet!");
+        return;
+      }
+
+      const accounts =  await ethereum.request({
+        method: "eth_requestAccounts",
+        params: [
+          {
+            eth_accounts: {}
+          }
+        ]
+      });
+
+      if (!isReturningUser) {
+        // Runs only they are brand new, or have hit the disconnect button
+          await window.ethereum.request({
+            method: "wallet_requestPermissions",
+            params: [
+              {
+                eth_accounts: {}
+              }
+            ]
+          });
+        }
+  
 
       console.log("Connected", accounts[0]);
-      setCurrentAccount(accounts[0]); 
+      setCurrentAccount(accounts[0]);
     } catch (error) {
       console.log(error)
     }
@@ -88,6 +115,21 @@ const App = () => {
     }
   }
 
+  const disconnectWallet =async () => {
+    try {
+      const { ethereum } = window;
+      if (ethereum) {
+        setCurrentAccount("");
+        isReturningUser = 1-isReturningUser;
+        console.log("Account set to 0! Is this user returning?", isReturningUser);
+      } else {
+        console.log("No account detected!");
+      }
+    }
+    catch (error) {
+      console.log(error)
+    }
+  } 
 
   useEffect(() => {
     checkIfWalletIsConnected();
@@ -101,18 +143,32 @@ const App = () => {
         </div>
 
         <div className="bio">
-        I am Abdou and I love computers and maths. Connect your Ethereum wallet and wave at me!
+        I am Abdou and I love computers and maths. <br/> Connect your Ethereum wallet and wave at me!
         </div>
 
-        <button className="waveButton" onClick={wave}>
+        
+        {currentAccount && (
+          <button className="waveButton" onClick={wave}>
           Wave at Me
         </button>
-        
+        )}
+
+        {currentAccount && (
+          <div className="bio" >
+            Connected with address : {currentAccount}
+          </div>)
+        }
+
         {/*
         * If there is no currentAccount render this button
         */}
+        {currentAccount && (
+          <button className="disconnectButton" onClick={disconnectWallet}>
+          Disconnect Wallet
+          </button>
+        )}
         {!currentAccount && (
-          <button className="waveButton" onClick={connectWallet}>
+          <button className="connectButton" onClick={connectWallet}>
             Connect Wallet
           </button>
         )}

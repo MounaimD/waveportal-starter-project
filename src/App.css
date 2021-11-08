@@ -32,3 +32,24 @@
   border-radius: 5px;
   
 }
+
+.connectButton {
+  cursor: pointer;
+  margin-top: 16px;
+  padding: 8px;
+  border: 0;
+  border-radius: 5px;
+  color:darkblue;
+  background-color: lightblue;
+}
+
+.disconnectButton {
+  cursor: pointer;
+  margin-top: 16px;
+  padding: 8px;
+  border: 0;
+  border-radius: 5px;
+  color:crimson;
+  background-color: lightpink;
+
+}
