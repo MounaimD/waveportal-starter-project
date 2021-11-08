@@ -50,11 +50,6 @@ const App = () => {
         return;
       }
 
-      if (ethereum & ethereum.chainId !=='0x4') {
-        alert("Please connect to the Ethereum Rinkeby Testnet!");
-        return;
-      }
-
       const accounts =  await ethereum.request({
         method: "eth_requestAccounts",
         params: [
@@ -75,8 +70,6 @@ const App = () => {
             ]
           });
         }
-  
-
       console.log("Connected", accounts[0]);
       setCurrentAccount(accounts[0]);
     } catch (error) {
@@ -88,7 +81,8 @@ const App = () => {
     try {
       const { ethereum } = window;
 
-      if (ethereum) {
+      if (ethereum && ethereum.chainId ==='0x4') {
+        console.log("Retrieved total chainId...", ethereum.chainId);
         const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
         const wavePortalContract = new ethers.Contract(contractAddress, contractABI, signer);
@@ -107,7 +101,13 @@ const App = () => {
 
         count = await wavePortalContract.getTotalWaves();
         console.log("Retrieved total wave count...", count.toNumber());
+      } else if (ethereum && ethereum.chainId !=='0x4') {
+        console.log("Retrieved total chainId...", ethereum.chainId);
+        alert("Please connect to the rinkeby network!");
+        console.log("Ethereum object exists but not the right network!");
       } else {
+        console.log("Retrieved total chainId...", ethereum.chainId);
+        alert("Please connect to the rinkeby network!");
         console.log("Ethereum object doesn't exist!");
       }
     } catch (error) {
